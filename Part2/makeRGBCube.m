@@ -22,6 +22,9 @@ for vertI = 1 : 4
 	faceVert2 = topVertIndex( vertI );
 	faceVert3 = botVertIndex( vertI );
 	faces = [ faces ; faceVert1 faceVert2 faceVert3 ];
+    faceVert2 = botVertIndex( mod(vertI,4)+1 );
+	faceVert3 = botVertIndex( vertI );
+    faces = [ faces ; faceVert1 faceVert2 faceVert3 ];
 end
 
 %% Bottom faces

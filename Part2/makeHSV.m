@@ -1,17 +1,4 @@
-clear all
-close all
-%% show the obj file at 3D figure
-al = fopen('al7KC.obj');
-
-vertex_al = fscanf(al,'v %f %f %f %f %f %f\n',[6, Inf])';
-faces_al = fscanf(al,'f %f %f %f\n',[3, Inf])';
-
-fclose(al);
-
-
-
-%% Adding the HSV color cylinder onto the same world space as al7KC.obj, and then do some transformation
-% (Hint) You can try to combine 2 objects' vertices, faces together
+clear all; close all; clc;
 
 %% Define Vertices
 NumOfVert = 108;   %divide by 6 for color fill
@@ -23,11 +10,11 @@ botVerts = zeros(NumOfVert+1,3);
 topVertIndex = zeros(NumOfVert+1,1);
 botVertIndex = zeros(NumOfVert+1,1);
 for i=1:NumOfVert
-    topVerts(i,:) = [vertsX(i) vertsY(i)+2.5 0.5-2.5];
-    botVerts(i,:) = [vertsX(i) vertsY(i)+2.5 -0.5-2.5];
+    topVerts(i,:) = [vertsX(i) vertsY(i) 0.5];
+    botVerts(i,:) = [vertsX(i) vertsY(i) -0.5];
 end
-topVerts(NumOfVert+1,:) = [0 0+2.5 0.5-2.5];
-botVerts(NumOfVert+1,:) = [0 0+2.5 -0.5-2.5];
+topVerts(NumOfVert+1,:) = [0 0 0.5];
+botVerts(NumOfVert+1,:) = [0 0 -0.5];
 
 index = 1;
 for i=1:NumOfVert+1
@@ -116,63 +103,5 @@ for i=1:NumOfVert
    end 
 end
 
-%% Show 
-vertex = vertex_al(:,1:3);
-
-max_x = max(vertex(:,1));
-min_x = min(vertex(:,1));
-x_move = (max_x + min_x)/2;
-
-max_y = max(vertex(:,2));
-min_y = min(vertex(:,2));
-y_move = (max_y + min_y)/2;
-
-max_z = max(vertex(:,3));
-min_z = min(vertex(:,3));
-z_move = (max_z + min_z)/2;
-
-vertex (:,1) = vertex (:,1) - x_move;
-vertex (:,2) = vertex (:,2) - y_move;
-vertex (:,3) = vertex (:,3) - z_move;
-
-outfaces = faces_al;
-colors = vertex_al(:,4:6);
-vertex = [vertex;verts];
-outfaces = [outfaces;faces+3618];
-colors = [colors;vertColor];
-
-
-%% Lighting (You may need to modify the lighting here)
-
-trisurf(outfaces,vertex(:,1),vertex(:,2),vertex(:,3),'FaceVertexCData', colors,'FaceColor','interp', 'EdgeAlpha', 0);
-light('Position',[0.0,0.0,5.0],'Style','local');
-lighting phong;
-
-figure
-trisurf(outfaces,vertex(:,1),vertex(:,2),vertex(:,3),'FaceVertexCData', colors,'FaceColor','interp', 'EdgeAlpha', 0);
-light('Position',[0.0,0.0,5.0],'Style','infinite');
-lighting phong;
-
-figure
-trisurf(outfaces,vertex(:,1),vertex(:,2),vertex(:,3),'FaceVertexCData', colors,'FaceColor','interp', 'EdgeAlpha', 0);
-light('Position',[0.0,0.0,5.0]);
-material([1.0,0.0,0.0]);
-lighting phong;
-
-figure
-trisurf(outfaces,vertex(:,1),vertex(:,2),vertex(:,3),'FaceVertexCData', colors,'FaceColor','interp', 'EdgeAlpha', 0);
-light('Position',[0.0,0.0,5.0]);
-material([0.1,1.0,0.0]);
-lighting phong;
-
-figure
-trisurf(outfaces,vertex(:,1),vertex(:,2),vertex(:,3),'FaceVertexCData', colors,'FaceColor','interp', 'EdgeAlpha', 0);
-light('Position',[0.0,0.0,5.0]);
-material([0.1,0.1,1.0]);
-lighting phong;
-
-figure
-trisurf(outfaces,vertex(:,1),vertex(:,2),vertex(:,3),'FaceVertexCData', colors,'FaceColor','interp', 'EdgeAlpha', 0);
-light('Position',[0.0,0.0,5.0]);
-material([0.1,0.8,1.0]);
-lighting phong;
+%% Show HSV cylinder in 3D figure
+result = trisurf(faces,verts(:,1),verts(:,2),verts(:,3),'FaceVertexCData', vertColor,'FaceColor','interp', 'EdgeAlpha', 0);
