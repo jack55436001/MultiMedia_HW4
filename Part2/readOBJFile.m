@@ -1,6 +1,6 @@
 clear all
 close all
-%% show the obj file at 3D figure
+%% fscanf the obj file at 3D figure
 al = fopen('al7KC.obj');
 
 vertex_al = fscanf(al,'v %f %f %f %f %f %f\n',[6, Inf])';
@@ -9,10 +9,9 @@ faces_al = fscanf(al,'f %f %f %f\n',[3, Inf])';
 fclose(al);
 
 
+%% Q2_c( Adding the HSV color cylinder onto the same world space as al7KC.obj, and then do some transformation)
 
-%% Adding the HSV color cylinder onto the same world space as al7KC.obj, and then do some transformation
-% (Hint) You can try to combine 2 objects' vertices, faces together
-
+%% Put HSV color cylinder
 %% Define Vertices
 NumOfVert = 108;   %divide by 6 for color fill
 vertsPolarAngle = linspace(0,2*pi,NumOfVert+1);
@@ -23,11 +22,11 @@ botVerts = zeros(NumOfVert+1,3);
 topVertIndex = zeros(NumOfVert+1,1);
 botVertIndex = zeros(NumOfVert+1,1);
 for i=1:NumOfVert
-    topVerts(i,:) = [vertsX(i) vertsY(i)+2.5 0.5-2.5];
-    botVerts(i,:) = [vertsX(i) vertsY(i)+2.5 -0.5-2.5];
+    topVerts(i,:) = [vertsX(i) vertsY(i)+2.5 0.5-2.5];  %move (0,2.5,-2.5)
+    botVerts(i,:) = [vertsX(i) vertsY(i)+2.5 -0.5-2.5]; %move (0,2.5,-2.5)
 end
-topVerts(NumOfVert+1,:) = [0 0+2.5 0.5-2.5];
-botVerts(NumOfVert+1,:) = [0 0+2.5 -0.5-2.5];
+topVerts(NumOfVert+1,:) = [0 0+2.5 0.5-2.5];    %move (0,2.5,-2.5)
+botVerts(NumOfVert+1,:) = [0 0+2.5 -0.5-2.5];   %move (0,2.5,-2.5)
 
 index = 1;
 for i=1:NumOfVert+1
@@ -116,7 +115,7 @@ for i=1:NumOfVert
    end 
 end
 
-%% Show 
+%% Adjust al7KC.obj 
 vertex = vertex_al(:,1:3);
 
 max_x = max(vertex(:,1));
@@ -134,45 +133,53 @@ z_move = (max_z + min_z)/2;
 vertex (:,1) = vertex (:,1) - x_move;
 vertex (:,2) = vertex (:,2) - y_move;
 vertex (:,3) = vertex (:,3) - z_move;
-
+%% Combine two object and show result
 outfaces = faces_al;
 colors = vertex_al(:,4:6);
 vertex = [vertex;verts];
-outfaces = [outfaces;faces+3618];
+outfaces = [outfaces;faces+3618]; %adjust index
 colors = [colors;vertColor];
-
+result = trisurf(outfaces,vertex(:,1),vertex(:,2),vertex(:,3),'FaceVertexCData', colors,'FaceColor','interp', 'EdgeAlpha', 0);
+saveas(result,'Q2_c.fig');
 
 %% Lighting (You may need to modify the lighting here)
-
+%% Q2_d
+figure
 trisurf(outfaces,vertex(:,1),vertex(:,2),vertex(:,3),'FaceVertexCData', colors,'FaceColor','interp', 'EdgeAlpha', 0);
+title('Position Light');
 light('Position',[0.0,0.0,5.0],'Style','local');
 lighting phong;
 
 figure
 trisurf(outfaces,vertex(:,1),vertex(:,2),vertex(:,3),'FaceVertexCData', colors,'FaceColor','interp', 'EdgeAlpha', 0);
+title('Directional Light');
 light('Position',[0.0,0.0,5.0],'Style','infinite');
 lighting phong;
-
+%% Q2_e
 figure
 trisurf(outfaces,vertex(:,1),vertex(:,2),vertex(:,3),'FaceVertexCData', colors,'FaceColor','interp', 'EdgeAlpha', 0);
+title('Ka = 1.0 Kd = 0.0 Ks = 0.0');
 light('Position',[0.0,0.0,5.0]);
 material([1.0,0.0,0.0]);
 lighting phong;
 
 figure
 trisurf(outfaces,vertex(:,1),vertex(:,2),vertex(:,3),'FaceVertexCData', colors,'FaceColor','interp', 'EdgeAlpha', 0);
+title('Ka = 0.1 Kd = 1.0 Ks = 0.0');
 light('Position',[0.0,0.0,5.0]);
 material([0.1,1.0,0.0]);
 lighting phong;
 
 figure
 trisurf(outfaces,vertex(:,1),vertex(:,2),vertex(:,3),'FaceVertexCData', colors,'FaceColor','interp', 'EdgeAlpha', 0);
+title('Ka = 0.1 Kd = 0.1 Ks = 1.0');
 light('Position',[0.0,0.0,5.0]);
 material([0.1,0.1,1.0]);
 lighting phong;
 
 figure
 trisurf(outfaces,vertex(:,1),vertex(:,2),vertex(:,3),'FaceVertexCData', colors,'FaceColor','interp', 'EdgeAlpha', 0);
+title('Ka = 0.1 Kd = 0.8 Ks = 1.0');
 light('Position',[0.0,0.0,5.0]);
 material([0.1,0.8,1.0]);
 lighting phong;

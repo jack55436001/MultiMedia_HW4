@@ -31,4 +31,5 @@ end
 faces = [ faces ; 5 7 6 ; 5 8 7 ];
 
 %% Show RGB Cube in 3D figure
-trisurf(faces,verts(:,1),verts(:,2),verts(:,3),'FaceVertexCData', vertColors,'FaceColor','interp', 'EdgeAlpha', 0);
+result = trisurf(faces,verts(:,1),verts(:,2),verts(:,3),'FaceVertexCData', vertColors,'FaceColor','interp', 'EdgeAlpha', 0);
+saveas(result,'RGBCube.fig');

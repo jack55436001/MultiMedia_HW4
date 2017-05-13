@@ -105,3 +105,4 @@ end
 
 %% Show HSV cylinder in 3D figure
 result = trisurf(faces,verts(:,1),verts(:,2),verts(:,3),'FaceVertexCData', vertColor,'FaceColor','interp', 'EdgeAlpha', 0);
+saveas(result,'HSV_cyl.fig');
